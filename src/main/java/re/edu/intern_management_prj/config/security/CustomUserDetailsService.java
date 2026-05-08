@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsernameOrEmailOrPhoneNumber(loginInfo, loginInfo, loginInfo)
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng!"));
 
-        authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
         return CustomUserDetails.builder()
                 .user(user)
