@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import re.edu.intern_management_prj.repository.UserRepository;
 import re.edu.intern_management_prj.util.annotations.PhoneConstraint;
 import re.edu.intern_management_prj.util.annotations.RoleConstraint;
 import re.edu.intern_management_prj.util.annotations.UniqueConstraint;
@@ -20,7 +21,7 @@ import re.edu.intern_management_prj.util.annotations.UniqueConstraint;
 public class CreateUserRequest {
     @NotBlank(message = "Tên đăng nhập không được để trống!")
     @Length(min = 3, max = 50, message = "Tên đăng nhập phải có độ dài từ 3 đến 50 ký tự!")
-    @UniqueConstraint(field = "username", message = "Tên đăng nhập đã tồn tại!")
+    @UniqueConstraint(field = "username", repository = UserRepository.class, message = "Tên đăng nhập đã tồn tại!")
     private String username;
 
     @NotBlank(message = "Mật khẩu không được để trống!")
@@ -32,7 +33,7 @@ public class CreateUserRequest {
 
     @Email(message = "Email không hợp lệ!")
     @NotBlank(message = "Email không được để trống!")
-    @UniqueConstraint(field = "email", message = "Email đã tồn tại!")
+    @UniqueConstraint(field = "email", repository = UserRepository.class, message = "Email đã tồn tại!")
     @Pattern(
         regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
         message = "Email phải có domain hợp lệ (vd: example@gmail.com)")
@@ -40,7 +41,7 @@ public class CreateUserRequest {
 
     @PhoneConstraint(message = "Số điện thoại không hợp lệ!")
     @NotBlank(message = "Số điện thoại không được để trống!")
-    @UniqueConstraint(field = "phoneNumber", message = "Số điện thoại đã tồn tại!")
+    @UniqueConstraint(field = "phoneNumber", repository = UserRepository.class, message = "Số điện thoại đã tồn tại!")
     private String phoneNumber;
 
     @NotBlank(message = "Vai trò không được để trống!")

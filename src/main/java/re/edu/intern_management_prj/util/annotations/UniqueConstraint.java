@@ -22,4 +22,6 @@ public @interface UniqueConstraint {
     Class<? extends Payload>[] payload() default {};
 
     String field();
+
+    Class<?> repository();
 }

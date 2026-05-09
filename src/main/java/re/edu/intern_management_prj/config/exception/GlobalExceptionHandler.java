@@ -3,6 +3,7 @@ package re.edu.intern_management_prj.config.exception;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -67,4 +68,31 @@ public class GlobalExceptionHandler {
                 .data("Dữ liệu yêu cầu không hợp lệ.")
                 .build());
     }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<ApiResponse<String>> handlePropertyReferenceException(PropertyReferenceException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.<String>builder()
+                .success(false)
+                .message("Thông tin không hợp lệ.")
+                .data(e.getMessage())
+                .build());
+    }
+
+    @ExceptionHandler(InvalidRoleException.class)
+    public ResponseEntity<ApiResponse<String>> handleInvalidRoleException(InvalidRoleException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.<String>builder()
+                .success(false)
+                .message("Vai trò không hợp lệ.")
+                .data(e.getMessage())
+                .build());
+    }
+
+        @ExceptionHandler(DuplicateResourceException.class)
+        public ResponseEntity<ApiResponse<String>> handleDuplicateException(DuplicateResourceException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.<String>builder()
+                    .success(false)
+                    .message("Dữ liệu đã tồn tại.")
+                    .data(e.getMessage())
+                    .build());
+        }
 }

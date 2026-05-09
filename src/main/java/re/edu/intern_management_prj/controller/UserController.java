@@ -77,7 +77,7 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse<UserDetailResponse>> updateUser(@PathVariable int id, @Valid @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<ApiResponse<UserDetailResponse>> updateUser(@PathVariable int id, @RequestBody UpdateUserRequest request) {
         UserDetailResponse userDetailResponse = userService.updateUser(id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<UserDetailResponse>builder()
