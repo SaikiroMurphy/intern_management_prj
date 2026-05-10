@@ -9,20 +9,17 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
-public class StudentDetailResponse {
-    private Integer studentId;
-    private String studentCode;
+@Setter
+public class MentorDetailResponse {
+    private Long id;
     private String username;
     private String fullName;
     private String email;
     private String phoneNumber;
-    private String major;
-    private String studentClass;
-    private String dateOfBirth;
-    private String address;
+    private String department;
+    private String academicRank;
+    private boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

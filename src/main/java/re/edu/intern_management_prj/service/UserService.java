@@ -27,21 +27,31 @@ public class UserService {
     private final PageMapper pageMapper;
 
     public PageResponse<UserResponse> getAllUsers(Pageable pageable, String role) {
-        Page<UserResponse> userPage;
+        Page<User> userPage;
 
         if (role != null) {
             RoleEnum roleEnum = RoleEnum.valueOf(role.toUpperCase());
-            userPage = userRepository.findByRole(roleEnum, pageable).map(userMapper::toUserResponse);
+            userPage = userRepository.findByRole(roleEnum, pageable);
         } else {
-            userPage = userRepository.findAll(pageable).map(userMapper::toUserResponse);
+            userPage = userRepository.findAll(pageable);
         }
 
-        return pageMapper.toPageResponse(userPage);
+        Page<UserResponse> responsePage = userPage.map(user -> {
+            if (user.isDeleted()) {
+                return null;
+            }
+            return userMapper.toUserResponse(user);
+        });
+
+        return pageMapper.toPageResponse(responsePage);
     }
 
     public UserDetailResponse getUserById(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với id: " + id));
+        if (user.isDeleted()) {
+            throw new EntityNotFoundException("Người dùng đã bị xóa!");
+        }
         return userMapper.toUserDetailResponse(user);
     }
 
@@ -58,6 +68,9 @@ public class UserService {
     public UserDetailResponse updateUser(int id, UpdateUserRequest req) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với id: " + id));
+        if (user.isDeleted()) {
+            throw new EntityNotFoundException("Người dùng đã bị xóa!");
+        }
 
         if (req.getUsername() != null) {
             if (userRepository.existsByUsernameAndIdNot(req.getUsername(), id)) {
@@ -99,6 +112,9 @@ public class UserService {
     public UserDetailResponse updateStatus(int id, boolean active) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với id: " + id));
+        if (user.isDeleted()) {
+            throw new EntityNotFoundException("Người dùng đã bị xóa!");
+        }
         user.setActive(active);
         User updatedUser = userRepository.save(user);
         return userMapper.toUserDetailResponse(updatedUser);
@@ -107,7 +123,9 @@ public class UserService {
     public UserDetailResponse updateRole(int id, String role) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với id: " + id));
-        
+        if (user.isDeleted()) {
+            throw new EntityNotFoundException("Người dùng đã bị xóa!");
+        }
         if (user.getRole() == RoleEnum.ADMIN) {
             throw new IllegalArgumentException("Không thể thay đổi vai trò của ADMIN!");
         }
@@ -119,10 +137,13 @@ public class UserService {
     public void deleteUser(int id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với id: " + id));
-
+        if (user.isDeleted()) {
+            throw new EntityNotFoundException("Người dùng đã bị xóa!");
+        }
         if (user.getRole() == RoleEnum.ADMIN) {
             throw new IllegalArgumentException("Không thể xóa người dùng có vai trò ADMIN!");
         }
-        userRepository.delete(user);
+        user.setDeleted(true);
+        userRepository.save(user);
     }
 }

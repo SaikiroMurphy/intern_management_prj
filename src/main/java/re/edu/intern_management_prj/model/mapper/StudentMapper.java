@@ -14,10 +14,10 @@ public interface StudentMapper {
     @Mapping(source = "user.fullName", target = "fullName")
     @Mapping(source = "user.email", target = "email")
     @Mapping(source = "user.phoneNumber", target = "phoneNumber")
+    @Mapping(source = "user.username", target = "username")
     StudentDetailResponse toStudentDetailResponse(Student student);
 
     @Mapping(source = "user.fullName", target = "fullName")
-    @Mapping(source = "user.email", target = "email")
     StudentResponse toStudentResponse(Student student);
 
     @Mapping(target = "user", ignore = true)

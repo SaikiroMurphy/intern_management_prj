@@ -33,7 +33,12 @@ public class StudentService {
 
         User user = authService.getMyInfo();
         if (user.getRole().name().equals("ADMIN")) {
-            studentPage = studentRepository.findAll(pageable).map(studentMapper::toStudentResponse);
+            studentPage = studentRepository.findAll(pageable).map(student -> {
+                if (student.getUser().isDeleted()) {
+                    return null;
+                }
+                return studentMapper.toStudentResponse(student);
+            });
         // } else if (user.getRole().name().equals("MENTOR")) {
         //     studentPage = studentRepository.findAll(pageable)
         //             .filter(student -> student.getMentor() != null && student.getMentor().getId().equals(user.getId()))
@@ -49,6 +54,10 @@ public class StudentService {
 
         User user = userRepository.findById(req.getStudentId())
                 .orElseThrow(() -> new EntityNotFoundException("User không tồn tại!"));
+        
+        if (user.isDeleted()) {
+            throw new EntityNotFoundException("User đã bị xóa!");
+        }
 
         if (!"STUDENT".equals(user.getRole().name())) {
             throw new InvalidRoleException("User không phải STUDENT!");
@@ -68,6 +77,10 @@ public class StudentService {
 
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy sinh viên với id: " + id));
+        
+        if (student.getUser().isDeleted()) {
+            throw new EntityNotFoundException("Sinh viên đã bị xóa!");
+        }
 
         return studentMapper.toStudentDetailResponse(student);
     }
@@ -80,6 +93,10 @@ public class StudentService {
 
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy sinh viên với id: " + id));
+        
+        if (student.getUser().isDeleted()) {
+            throw new EntityNotFoundException("Sinh viên đã bị xóa!");
+        }
 
         if (req.getMajor() != null) {
             student.setMajor(req.getMajor());

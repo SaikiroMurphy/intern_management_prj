@@ -24,6 +24,14 @@ public class AuthService {
     public String login(String loginInfo) {
         User user = userRepository.findByUsernameOrEmailOrPhoneNumber(loginInfo, loginInfo, loginInfo)
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng!"));
+
+        if (user.isDeleted()) {
+            throw new IllegalArgumentException("Tài khoản đã bị xóa!");
+        }
+
+        if (!user.isActive()) {
+            throw new IllegalArgumentException("Tài khoản không hoạt động!");
+        }
         
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));

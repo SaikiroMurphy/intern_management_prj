@@ -9,10 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class StudentResponse {
-    private Integer studentId;
-    private String studentCode;
+public class MentorResponse {
+    private Long id;
     private String fullName;
-    private String major;
-    private String studentClass;
+    private String department;
 }
