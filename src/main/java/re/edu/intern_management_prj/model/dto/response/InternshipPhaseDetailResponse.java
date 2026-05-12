@@ -1,5 +1,6 @@
 package re.edu.intern_management_prj.model.dto.response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -11,19 +12,22 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
-public class MentorDetailResponse {
-    private int mentorId;
-    private String username;
-    private String fullName;
-    private String email;
-    private String phoneNumber;
-    private String department;
-    private String academicRank;
-    private boolean isActive;
+@Getter
+public class InternshipPhaseDetailResponse {
+    private Integer phaseId;
+    private String phaseName;
+    
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate startDate;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate endDate;
+    private String description;
+
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime createdAt;
+    
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime updatedAt;
 }

@@ -37,14 +37,14 @@ public class MentorService {
         return pageMapper.toPageResponse(mentorPage);
     }
 
-    public MentorDetailResponse getMentorById(Integer id) {
+    public MentorDetailResponse getMentorById(int id) {
         User user = authService.getMyInfo();
         if (user.getId() != id && !user.getRole().name().equals("ADMIN") && !user.getRole().name().equals("STUDENT")) {
             throw new IllegalArgumentException("Vai trò không hợp lệ!");
         }
 
         Mentor mentor = mentorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mentor với id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy mentor với id: " + id));
         
         if (mentor.getUser().isDeleted()) {
             throw new EntityNotFoundException("Mentor đã bị xóa!");

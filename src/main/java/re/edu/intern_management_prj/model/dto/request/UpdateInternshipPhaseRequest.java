@@ -8,16 +8,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import re.edu.intern_management_prj.util.annotations.DateRange;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UpdateStudentRequest {
-    private String studentCode;
-    private String major;
-    private String studentClass;
+@DateRange(start = "startDate", end = "endDate")
+public class UpdateInternshipPhaseRequest {
+    private String phaseName;
+
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate dateOfBirth;
-    private String address;
+    private LocalDate startDate;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate endDate;
+
+    private String description;
 }

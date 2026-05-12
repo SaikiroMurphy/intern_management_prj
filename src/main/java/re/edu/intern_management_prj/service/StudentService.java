@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import re.edu.intern_management_prj.config.exception.InvalidRoleException;
+import re.edu.intern_management_prj.exception.InvalidRoleException;
 import re.edu.intern_management_prj.model.dto.request.CreateStudentRequest;
 import re.edu.intern_management_prj.model.dto.request.UpdateStudentRequest;
 import re.edu.intern_management_prj.model.dto.response.PageResponse;

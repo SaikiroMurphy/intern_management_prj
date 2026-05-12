@@ -1,4 +1,4 @@
-package re.edu.intern_management_prj.model.dto.request;
+package re.edu.intern_management_prj.model.dto.response;
 
 import java.time.LocalDate;
 
@@ -13,11 +13,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UpdateStudentRequest {
-    private String studentCode;
-    private String major;
-    private String studentClass;
+public class InternshipPhaseResponse {
+    private int phaseId;
+    private String phaseName;
+
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate dateOfBirth;
-    private String address;
+    private LocalDate startDate;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate endDate;
 }

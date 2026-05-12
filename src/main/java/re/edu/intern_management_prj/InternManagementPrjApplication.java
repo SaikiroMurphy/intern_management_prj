@@ -34,8 +34,6 @@ public class InternManagementPrjApplication {
                 admin.setRole(RoleEnum.ADMIN);
 
                 userRepository.save(admin);
-
-                System.out.println("✅ Admin account created: admin / admin123");
             }
         };
     }}

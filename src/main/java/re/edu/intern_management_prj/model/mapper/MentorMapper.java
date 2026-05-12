@@ -20,5 +20,7 @@ public interface MentorMapper {
     @Mapping(source = "user.fullName", target = "fullName")
     MentorResponse toMentorResponse(Mentor mentor);
 
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "mentorId", ignore = true)
     Mentor toMentor(CreateMentorRequest request);
 }

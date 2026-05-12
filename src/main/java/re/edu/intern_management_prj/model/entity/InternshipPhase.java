@@ -28,4 +28,7 @@ public class InternshipPhase extends BaseEntity {
 
     @Column
     private String description;
+
+    @Column
+    private boolean isDeleted;
 }

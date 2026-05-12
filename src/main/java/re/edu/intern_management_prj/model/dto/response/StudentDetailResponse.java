@@ -1,6 +1,9 @@
 package re.edu.intern_management_prj.model.dto.response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,9 +23,12 @@ public class StudentDetailResponse {
     private String phoneNumber;
     private String major;
     private String studentClass;
-    private String dateOfBirth;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dateOfBirth;
     private String address;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime updatedAt;
 
 }

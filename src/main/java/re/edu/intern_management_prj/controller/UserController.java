@@ -113,7 +113,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<String>> deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<String>builder()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.<String>builder()
                 .success(true)
                 .message("Xóa người dùng thành công!")
                 .data("Người dùng có id " + id + " đã bị xóa.")

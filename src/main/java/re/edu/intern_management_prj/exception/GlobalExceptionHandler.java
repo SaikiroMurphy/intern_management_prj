@@ -1,4 +1,4 @@
-package re.edu.intern_management_prj.config.exception;
+package re.edu.intern_management_prj.exception;
 
 import java.util.Map;
 import java.util.stream.Collectors;

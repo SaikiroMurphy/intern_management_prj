@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MentorResponse {
-    private Long id;
+    private int mentorId;
     private String fullName;
     private String department;
 }

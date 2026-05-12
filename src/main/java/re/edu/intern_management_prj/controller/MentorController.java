@@ -15,6 +15,7 @@ import re.edu.intern_management_prj.service.MentorService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,7 +60,7 @@ public class MentorController {
     @PostMapping
     public ResponseEntity<ApiResponse<MentorDetailResponse>> createMentor(@RequestBody CreateMentorRequest req) {
         MentorDetailResponse mentorResponse = mentorService.createMentor(req);
-        return ResponseEntity.ok(ApiResponse.<MentorDetailResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<MentorDetailResponse>builder()
                 .success(true)
                 .message("Tạo giáo viên hướng dẫn thành công!")
                 .data(mentorResponse)
