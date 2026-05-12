@@ -1,7 +1,6 @@
 package re.edu.intern_management_prj.model.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import re.edu.intern_management_prj.util.annotations.UniqueConstraint;
 @Getter
 @Setter
 public class CreateStudentRequest {
-    @NotNull(message = "ID sinh viên không được để trống!")
+    @NotBlank(message = "ID sinh viên không được để trống!")
     @UniqueConstraint(field = "studentId", repository = StudentRepository.class, message = "ID sinh viên đã tồn tại!")
     private Integer studentId;
 

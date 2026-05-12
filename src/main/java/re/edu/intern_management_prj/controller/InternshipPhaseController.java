@@ -3,6 +3,7 @@ package re.edu.intern_management_prj.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import re.edu.intern_management_prj.model.dto.request.CreateInternshipPhaseRequest;
 import re.edu.intern_management_prj.model.dto.request.UpdateInternshipPhaseRequest;
@@ -48,7 +49,7 @@ public class InternshipPhaseController {
     }
     
     @PostMapping
-    public ResponseEntity<ApiResponse<InternshipPhaseDetailResponse>> createPhase(@RequestBody CreateInternshipPhaseRequest req) {
+    public ResponseEntity<ApiResponse<InternshipPhaseDetailResponse>> createPhase(@Valid @RequestBody CreateInternshipPhaseRequest req) {
         InternshipPhaseDetailResponse res = internshipPhaseService.createInternshipPhase(req);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<InternshipPhaseDetailResponse>builder()
@@ -87,11 +88,7 @@ public class InternshipPhaseController {
     public ResponseEntity<ApiResponse<String>> deletePhase(@PathVariable int id) {
         internshipPhaseService.deletePhase(id);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.<String>builder()
-                .success(true)
-                .message("Xóa giai đoạn thưc tập thành công!")
-                .data("Giai đoạn thực tập có id " + id + " đã bị xóa.")
-                .build());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }
 }

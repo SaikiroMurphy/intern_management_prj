@@ -1,5 +1,6 @@
 package re.edu.intern_management_prj.exception;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -61,11 +63,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiResponse<String>> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    public ResponseEntity<ApiResponse<String>> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.<String>builder()
                 .success(false)
                 .message("Thông tin không hợp lệ.")
-                .data("Dữ liệu yêu cầu không hợp lệ.")
+                .data(e.getLocalizedMessage())
                 .build());
     }
 
@@ -94,5 +97,26 @@ public class GlobalExceptionHandler {
                     .message("Dữ liệu đã tồn tại.")
                     .data(e.getMessage())
                     .build());
+        }
+
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<ApiResponse<Map<String, String>>> handleMethodArgumentNotValidException(
+                        MethodArgumentNotValidException e) {
+
+                Map<String, String> errors = new HashMap<>();
+
+                e.getBindingResult().getFieldErrors().forEach(error -> {
+                        errors.merge(
+                                        error.getField(),
+                                        error.getDefaultMessage(),
+                                        (oldMsg, newMsg) -> oldMsg + "; " + newMsg);
+                });
+
+                return ResponseEntity.badRequest().body(
+                                ApiResponse.<Map<String, String>>builder()
+                                                .success(false)
+                                                .message("Dữ liệu không hợp lệ.")
+                                                .data(errors)
+                                                .build());
         }
 }

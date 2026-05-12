@@ -32,7 +32,18 @@ public class DateRangeValidator
                 return true;
             }
 
-            return start.isBefore(end);
+            if (start.isAfter(end)) {
+                context.disableDefaultConstraintViolation();
+
+                context.buildConstraintViolationWithTemplate(
+                        "startDate không được sau endDate!")
+                        .addPropertyNode("endDate")
+                        .addConstraintViolation();
+
+                return false;
+            }
+
+            return true;
 
         } catch (Exception e) {
             return false;

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,11 +24,11 @@ public class CreateInternshipPhaseRequest {
     @UniqueConstraint(field = "phaseName", repository = InternshipPhaseRepository.class, message = "Tên giai đoạn đã tồn tại!")
     private String phaseName;
 
-    @NotBlank(message = "Ngày bắt đầu không được để trống!")
+    @NotNull(message = "Ngày bắt đầu không được để trống!")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate startDate;
 
-    @NotBlank(message = "Ngày kết thúc không được để trống!")
+    @NotNull(message = "Ngày kết thúc không được để trống!")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate endDate;
 

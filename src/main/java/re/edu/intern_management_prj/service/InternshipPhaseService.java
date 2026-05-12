@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import java.time.LocalDate;
 import re.edu.intern_management_prj.model.dto.request.CreateInternshipPhaseRequest;
 import re.edu.intern_management_prj.model.dto.request.UpdateInternshipPhaseRequest;
 import re.edu.intern_management_prj.model.dto.response.InternshipPhaseResponse;
@@ -49,7 +50,7 @@ public class InternshipPhaseService {
         }
 
         if (req.getPhaseName() != null) {
-            if (internshipPhaseRepository.existsByPhaseNameAndIdNot(req.getPhaseName(), id)) {
+            if (internshipPhaseRepository.existsByPhaseNameAndPhaseIdNot(req.getPhaseName(), id)) {
                 throw new IllegalArgumentException("Tên giai đoạn thực tập đã tồn tại!");
             }
             phase.setPhaseName(req.getPhaseName());
@@ -65,6 +66,12 @@ public class InternshipPhaseService {
 
         if (req.getDescription() != null) {
             phase.setDescription(req.getDescription());
+        }
+
+        LocalDate newStart = req.getStartDate() != null ? req.getStartDate() : phase.getStartDate();
+        LocalDate newEnd = req.getEndDate() != null ? req.getEndDate() : phase.getEndDate();
+        if (newStart != null && newEnd != null && newStart.isAfter(newEnd)) {
+            throw new IllegalArgumentException("startDate không được sau endDate!");
         }
 
         internshipPhaseRepository.save(phase);
@@ -87,7 +94,7 @@ public class InternshipPhaseService {
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy giai đoạn thực tập với id: " + id));
 
         if (phase.isDeleted()) {
-            throw new EntityNotFoundException("Giai đonaj thực tập này đã bị xóa!");
+            throw new EntityNotFoundException("Giai đoạn thực tập này đã bị xóa!");
         }
 
         phase.setDeleted(true);
