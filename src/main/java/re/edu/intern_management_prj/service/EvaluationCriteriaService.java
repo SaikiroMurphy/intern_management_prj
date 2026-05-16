@@ -55,7 +55,7 @@ public class EvaluationCriteriaService implements IBaseService<CreateEvaluationC
         }
 
         if (req.getCriterionName() != null) {
-            if (evaluationCriteriaRepository.existsByCriterionNameAndIdNot(req.getCriterionName(), id)) {
+            if (evaluationCriteriaRepository.existsByCriterionNameAndCriterionIdNot(req.getCriterionName(), id)) {
                 throw new IllegalArgumentException("Tên tiêu chí đánh giá đã tồn tại!");
             }
             crit.setCriterionName(req.getCriterionName());

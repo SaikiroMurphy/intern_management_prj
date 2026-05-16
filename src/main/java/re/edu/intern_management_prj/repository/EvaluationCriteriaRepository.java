@@ -9,5 +9,5 @@ import re.edu.intern_management_prj.model.entity.EvaluationCriteria;
 public interface EvaluationCriteriaRepository extends JpaRepository<EvaluationCriteria, Integer>{
     boolean existsByCriterionName(String criterionName);
 
-    boolean existsByCriterionNameAndIdNot(String criterionName, int id);
+    boolean existsByCriterionNameAndCriterionIdNot(String criterionName, Integer criterionId);
 }
