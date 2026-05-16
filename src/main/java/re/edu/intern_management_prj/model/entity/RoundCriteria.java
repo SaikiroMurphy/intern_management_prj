@@ -44,4 +44,7 @@ public class RoundCriteria {
 
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal weight;
+
+    @Column
+    private boolean isDeleted = false;
 }

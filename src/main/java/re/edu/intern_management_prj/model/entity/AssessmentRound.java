@@ -36,4 +36,7 @@ public class AssessmentRound extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean isActive = true;
+
+    @Column
+    private Boolean isDeleted = false;
 }

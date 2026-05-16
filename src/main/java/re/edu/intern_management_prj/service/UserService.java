@@ -26,7 +26,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final PageMapper pageMapper;
 
-    public PageResponse<UserResponse> getAllUsers(Pageable pageable, String role) {
+    public PageResponse<UserResponse> getAll(Pageable pageable, String role) {
         Page<User> userPage;
 
         if (role != null) {
@@ -46,7 +46,7 @@ public class UserService {
         return pageMapper.toPageResponse(responsePage);
     }
 
-    public UserDetailResponse getUserById(Integer id) {
+    public UserDetailResponse getById(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với id: " + id));
         if (user.isDeleted()) {
@@ -55,7 +55,7 @@ public class UserService {
         return userMapper.toUserDetailResponse(user);
     }
 
-    public UserDetailResponse createUser(CreateUserRequest request) {
+    public UserDetailResponse create(CreateUserRequest request) {
         User user = userMapper.toUser(request);
         if (userRepository.findByUsernameOrEmailOrPhoneNumber(user.getUsername(), user.getEmail(), user.getPhoneNumber()).isPresent()) {
             throw new IllegalArgumentException("Tên đăng nhập, Email hoặc số điện thoại đã tồn tại!");
@@ -65,7 +65,7 @@ public class UserService {
         return userMapper.toUserDetailResponse(savedUser);
     }
 
-    public UserDetailResponse updateUser(int id, UpdateUserRequest req) {
+    public UserDetailResponse update(int id, UpdateUserRequest req) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với id: " + id));
         if (user.isDeleted()) {
@@ -134,7 +134,7 @@ public class UserService {
         return userMapper.toUserDetailResponse(updatedUser);
     }
 
-    public void deleteUser(int id) {
+    public void delete(int id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với id: " + id));
         if (user.isDeleted()) {

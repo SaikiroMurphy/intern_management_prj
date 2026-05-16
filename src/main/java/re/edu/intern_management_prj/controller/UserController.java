@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 
 @RestController
@@ -36,7 +36,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> getAllUsers(
+    public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> getAll(
             @PageableDefault(
                 page = 0,
                 size = 10,
@@ -45,7 +45,7 @@ public class UserController {
             ) Pageable pageable,
             @RequestParam(required = false) String role) {
 
-        PageResponse<UserResponse> pageResponse = userService.getAllUsers(pageable, role);
+        PageResponse<UserResponse> pageResponse = userService.getAll(pageable, role);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<PageResponse<UserResponse>>builder()
                 .success(true)
@@ -55,8 +55,8 @@ public class UserController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserDetailResponse>> getUserById(@PathVariable Integer id) {
-        UserDetailResponse userDetailResponse = userService.getUserById(id);
+    public ResponseEntity<ApiResponse<UserDetailResponse>> getById(@PathVariable Integer id) {
+        UserDetailResponse userDetailResponse = userService.getById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<UserDetailResponse>builder()
                 .success(true)
@@ -66,8 +66,8 @@ public class UserController {
     }
     
     @PostMapping
-    public ResponseEntity<ApiResponse<UserDetailResponse>> addUser(@Valid @RequestBody CreateUserRequest request) {
-        UserDetailResponse userDetailResponse = userService.createUser(request);
+    public ResponseEntity<ApiResponse<UserDetailResponse>> create(@Valid @RequestBody CreateUserRequest request) {
+        UserDetailResponse userDetailResponse = userService.create(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<UserDetailResponse>builder()
                 .success(true)
@@ -76,9 +76,9 @@ public class UserController {
                 .build());
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<ApiResponse<UserDetailResponse>> updateUser(@PathVariable int id, @RequestBody UpdateUserRequest request) {
-        UserDetailResponse userDetailResponse = userService.updateUser(id, request);
+    @PatchMapping("{id}")
+    public ResponseEntity<ApiResponse<UserDetailResponse>> update(@PathVariable int id, @RequestBody UpdateUserRequest request) {
+        UserDetailResponse userDetailResponse = userService.update(id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<UserDetailResponse>builder()
                 .success(true)
@@ -87,7 +87,7 @@ public class UserController {
                 .build());
     }
     
-    @PutMapping("/{id}/status")
+    @PatchMapping("/{id}/status")
     public ResponseEntity<ApiResponse<UserDetailResponse>> updateUserStatus(@PathVariable int id, @RequestBody boolean active) {
         UserDetailResponse userDetailResponse = userService.updateStatus(id, active);
 
@@ -98,7 +98,7 @@ public class UserController {
                 .build());
     }
 
-    @PutMapping("/{id}/role")
+    @PatchMapping("/{id}/role")
     public ResponseEntity<ApiResponse<UserDetailResponse>> updateUserRole(@PathVariable int id, @RequestBody String role) {
         UserDetailResponse userDetailResponse = userService.updateRole(id, role);
 
@@ -111,7 +111,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> deleteUser(@PathVariable int id) {
-        userService.deleteUser(id);
+        userService.delete(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.<String>builder()
                 .success(true)

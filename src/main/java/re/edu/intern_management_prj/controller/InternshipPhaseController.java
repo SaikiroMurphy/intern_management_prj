@@ -22,17 +22,18 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/internship_phases")
-public class InternshipPhaseController {
+@RequestMapping("/api/internship-phases")
+public class InternshipPhaseController implements IBaseController<CreateInternshipPhaseRequest, UpdateInternshipPhaseRequest, InternshipPhaseResponse, InternshipPhaseDetailResponse>{
     private final InternshipPhaseService internshipPhaseService;
 
+    @Override
     @GetMapping
-    public ResponseEntity<ApiResponse<PageResponse<InternshipPhaseResponse>>> getAllPhases(
+    public ResponseEntity<ApiResponse<PageResponse<InternshipPhaseResponse>>> getAll(
             @PageableDefault(
                 page = 0,
                 size = 10,
@@ -40,7 +41,7 @@ public class InternshipPhaseController {
                 direction = Sort.Direction.DESC
             ) Pageable pageable) {
         
-        PageResponse<InternshipPhaseResponse> pageResponse = internshipPhaseService.getAllPhases(pageable);
+        PageResponse<InternshipPhaseResponse> pageResponse = internshipPhaseService.getAll(pageable);
         return ResponseEntity.ok(ApiResponse.<PageResponse<InternshipPhaseResponse>>builder()
                 .success(true)
                 .message("Lấy danh sách giai đoạn thực tập thành công!")
@@ -48,9 +49,10 @@ public class InternshipPhaseController {
                 .build());
     }
     
+    @Override
     @PostMapping
-    public ResponseEntity<ApiResponse<InternshipPhaseDetailResponse>> createPhase(@Valid @RequestBody CreateInternshipPhaseRequest req) {
-        InternshipPhaseDetailResponse res = internshipPhaseService.createInternshipPhase(req);
+    public ResponseEntity<ApiResponse<InternshipPhaseDetailResponse>> create(@Valid @RequestBody CreateInternshipPhaseRequest req) {
+        InternshipPhaseDetailResponse res = internshipPhaseService.create(req);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<InternshipPhaseDetailResponse>builder()
                 .success(true)
@@ -60,9 +62,10 @@ public class InternshipPhaseController {
         );
     }
     
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<InternshipPhaseDetailResponse>> updatePhase(@PathVariable int id, @RequestBody UpdateInternshipPhaseRequest req) {
-        InternshipPhaseDetailResponse res = internshipPhaseService.updateInternshipPhase(req, id);
+    @Override
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<InternshipPhaseDetailResponse>> update(@PathVariable int id, @RequestBody UpdateInternshipPhaseRequest req) {
+        InternshipPhaseDetailResponse res = internshipPhaseService.update(id, req);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<InternshipPhaseDetailResponse>builder()
                 .success(true)
@@ -72,9 +75,10 @@ public class InternshipPhaseController {
 
     }
 
+    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<InternshipPhaseDetailResponse>> getPhaseById(@PathVariable int id) {
-        InternshipPhaseDetailResponse res = internshipPhaseService.getPhaseById(id);
+    public ResponseEntity<ApiResponse<InternshipPhaseDetailResponse>> getById(@PathVariable int id) {
+        InternshipPhaseDetailResponse res = internshipPhaseService.getById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<InternshipPhaseDetailResponse>builder()
                 .success(true)
@@ -85,7 +89,7 @@ public class InternshipPhaseController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<String>> deletePhase(@PathVariable int id) {
+    public ResponseEntity<ApiResponse<String>> delete(@PathVariable int id) {
         internshipPhaseService.deletePhase(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

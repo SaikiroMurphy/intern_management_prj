@@ -19,12 +19,13 @@ import re.edu.intern_management_prj.repository.InternshipPhaseRepository;
 
 @Service
 @RequiredArgsConstructor
-public class InternshipPhaseService {
+public class InternshipPhaseService implements IBaseService<CreateInternshipPhaseRequest, UpdateInternshipPhaseRequest, InternshipPhaseResponse, InternshipPhaseDetailResponse>{
     private final InternshipPhaseRepository internshipPhaseRepository;
     private final PageMapper pageMapper;
     private final InternshipPhaseMapper internshipPhaseMapper;
 
-    public PageResponse<InternshipPhaseResponse> getAllPhases(Pageable pageable) {
+    @Override
+    public PageResponse<InternshipPhaseResponse> getAll(Pageable pageable) {
                 Page<InternshipPhaseResponse> internshipPhasePage = internshipPhaseRepository.findAll(pageable).map(internshipPhase -> {
             if (internshipPhase.isDeleted()) {
                 return null;
@@ -35,13 +36,15 @@ public class InternshipPhaseService {
 
     }
 
-    public InternshipPhaseDetailResponse createInternshipPhase(CreateInternshipPhaseRequest req) {
+    @Override
+    public InternshipPhaseDetailResponse create(CreateInternshipPhaseRequest req) {
         InternshipPhase internshipPhase = internshipPhaseMapper.toInternshipPhase(req);
 
         return internshipPhaseMapper.toInternshipPhaseDetailResponse(internshipPhaseRepository.save(internshipPhase));
     }
 
-    public InternshipPhaseDetailResponse updateInternshipPhase(UpdateInternshipPhaseRequest req, int id) {
+    @Override
+    public InternshipPhaseDetailResponse update(int id, UpdateInternshipPhaseRequest req) {
         InternshipPhase phase = internshipPhaseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy giai đoạn thực tập với id:" + id));
 
@@ -78,7 +81,8 @@ public class InternshipPhaseService {
         return internshipPhaseMapper.toInternshipPhaseDetailResponse(phase);
     }
 
-    public InternshipPhaseDetailResponse getPhaseById(int id) {
+    @Override
+    public InternshipPhaseDetailResponse getById(int id) {
         InternshipPhase phase = internshipPhaseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy giai đoạn thực tập với id: " + id));
 

@@ -21,14 +21,15 @@ import re.edu.intern_management_prj.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
-public class StudentService {
+public class StudentService implements IBaseService<CreateStudentRequest, UpdateStudentRequest, StudentResponse, StudentDetailResponse>{
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
     private final StudentMapper studentMapper;
     private final PageMapper pageMapper;
 
-    public PageResponse<StudentResponse> getAllStudents(Pageable pageable) {
+    @Override
+    public PageResponse<StudentResponse> getAll(Pageable pageable) {
         Page<StudentResponse> studentPage;
 
         User user = authService.getMyInfo();
@@ -50,7 +51,8 @@ public class StudentService {
         return pageMapper.toPageResponse(studentPage);
     }
 
-    public StudentDetailResponse createStudent(CreateStudentRequest req) {
+    @Override
+    public StudentDetailResponse create(CreateStudentRequest req) {
 
         User user = userRepository.findById(req.getStudentId())
                 .orElseThrow(() -> new EntityNotFoundException("User không tồn tại!"));
@@ -69,7 +71,8 @@ public class StudentService {
         return studentMapper.toStudentDetailResponse(studentRepository.save(student));
     }
 
-    public StudentDetailResponse getStudentById(int id) {
+    @Override
+    public StudentDetailResponse getById(int id) {
         User user = authService.getMyInfo();
         if(user.getId() != id && !"ADMIN".equals(user.getRole().name())) {
             throw new IllegalArgumentException("Bạn không có quyền truy cập thông tin sinh viên này!");
@@ -85,7 +88,8 @@ public class StudentService {
         return studentMapper.toStudentDetailResponse(student);
     }
 
-    public StudentDetailResponse updateStudent(int id, UpdateStudentRequest req) {
+    @Override
+    public StudentDetailResponse update(int id, UpdateStudentRequest req) {
         User user = authService.getMyInfo();
         if(user.getId() != id && !"ADMIN".equals(user.getRole().name())) {
             throw new IllegalArgumentException("Bạn không có quyền truy cập thông tin sinh viên này!");

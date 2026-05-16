@@ -20,14 +20,15 @@ import re.edu.intern_management_prj.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
-public class MentorService {
+public class MentorService implements IBaseService<CreateMentorRequest, UpdateMentorRequest, MentorResponse, MentorDetailResponse>{
     private final MentorRepository mentorRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
     private final MentorMapper mentorMapper;
     private final PageMapper pageMapper;
 
-    public PageResponse<MentorResponse> getAllMentors(Pageable pageable) {
+    @Override
+    public PageResponse<MentorResponse> getAll(Pageable pageable) {
         Page<MentorResponse> mentorPage = mentorRepository.findAll(pageable).map(mentor -> {
             if (mentor.getUser().isDeleted()) {
                 return null;
@@ -37,7 +38,8 @@ public class MentorService {
         return pageMapper.toPageResponse(mentorPage);
     }
 
-    public MentorDetailResponse getMentorById(int id) {
+    @Override
+    public MentorDetailResponse getById(int id) {
         User user = authService.getMyInfo();
         if (user.getId() != id && !user.getRole().name().equals("ADMIN") && !user.getRole().name().equals("STUDENT")) {
             throw new IllegalArgumentException("Vai trò không hợp lệ!");
@@ -53,7 +55,8 @@ public class MentorService {
         return mentorMapper.toMentorDetailResponse(mentor);
     }
 
-    public MentorDetailResponse createMentor(CreateMentorRequest req) {
+    @Override
+    public MentorDetailResponse create(CreateMentorRequest req) {
         User user = userRepository.findById(req.getMentorId())
                 .orElseThrow(() -> new EntityNotFoundException("User không tồn tại!"));
 
@@ -71,7 +74,8 @@ public class MentorService {
         return mentorMapper.toMentorDetailResponse(mentorRepository.save(mentor));
     }
 
-    public MentorDetailResponse updateMentor(int id, UpdateMentorRequest req) {
+    @Override
+    public MentorDetailResponse update(int id, UpdateMentorRequest req) {
         User user = authService.getMyInfo();
         if (user.getId() != id && !user.getRole().name().equals("ADMIN")) {
             throw new IllegalArgumentException("Bạn không có quyền cập nhật thông tin mentor này!");

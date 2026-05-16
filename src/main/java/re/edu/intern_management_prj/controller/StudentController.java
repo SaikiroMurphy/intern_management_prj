@@ -21,24 +21,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/students")
-public class StudentController {
+public class StudentController implements IBaseController<CreateStudentRequest, UpdateStudentRequest, StudentResponse, StudentDetailResponse>{
     private final StudentService studentService;
 
+    @Override
     @GetMapping
-    public ResponseEntity<ApiResponse<PageResponse<StudentResponse>>> getAllStudents(
+    public ResponseEntity<ApiResponse<PageResponse<StudentResponse>>> getAll(
             @PageableDefault(
                 page = 0,
                 size = 10,
                 sort = "studentId",
                 direction = Sort.Direction.DESC
             ) Pageable pageable) {
-        PageResponse<StudentResponse> pageResponse = studentService.getAllStudents(pageable);
+        PageResponse<StudentResponse> pageResponse = studentService.getAll(pageable);
 
         return ResponseEntity.ok(ApiResponse.<PageResponse<StudentResponse>>builder()
                 .success(true)
@@ -47,9 +48,10 @@ public class StudentController {
                 .build());
     }
     
+    @Override
     @PostMapping
-    public ResponseEntity<ApiResponse<StudentDetailResponse>> createStudent(@Valid @RequestBody CreateStudentRequest req) {
-        StudentDetailResponse studentResponse = studentService.createStudent(req);
+    public ResponseEntity<ApiResponse<StudentDetailResponse>> create(@Valid @RequestBody CreateStudentRequest req) {
+        StudentDetailResponse studentResponse = studentService.create(req);
 
         return ResponseEntity.ok(ApiResponse.<StudentDetailResponse>builder()
                 .success(true)
@@ -58,9 +60,10 @@ public class StudentController {
                 .build());
     }
     
+    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<StudentDetailResponse>> getStudentById(@PathVariable int id) {
-        StudentDetailResponse studentResponse = studentService.getStudentById(id);
+    public ResponseEntity<ApiResponse<StudentDetailResponse>> getById(@PathVariable int id) {
+        StudentDetailResponse studentResponse = studentService.getById(id);
 
         return ResponseEntity.ok(ApiResponse.<StudentDetailResponse>builder()
                 .success(true)
@@ -69,9 +72,10 @@ public class StudentController {
                 .build());
     }
     
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<StudentDetailResponse>> updateStudent(@PathVariable int id, @RequestBody UpdateStudentRequest request) {
-        StudentDetailResponse studentResponse = studentService.updateStudent(id, request);
+    @Override
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<StudentDetailResponse>> update(@PathVariable int id, @RequestBody UpdateStudentRequest request) {
+        StudentDetailResponse studentResponse = studentService.update(id, request);
 
         return ResponseEntity.ok(ApiResponse.<StudentDetailResponse>builder()
                 .success(true)
