@@ -25,6 +25,8 @@ import re.edu.intern_management_prj.config.jwt.JwtAuthenticationFilter;
 public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -102,9 +104,12 @@ public class SecurityConfig {
 
                 .anyRequest().authenticated()
             )
+            .exceptionHandling(ex -> ex
+                .accessDeniedHandler(accessDeniedHandler)
+                .authenticationEntryPoint(authenticationEntryPoint)
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .httpBasic(Customizer.withDefaults());
-
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

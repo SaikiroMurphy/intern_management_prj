@@ -4,7 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 import re.edu.intern_management_prj.model.dto.request.CreateEvaluationCriteriaRequest;
-import re.edu.intern_management_prj.model.dto.request.UpdateEvaluationCriteriaRequest;
 import re.edu.intern_management_prj.model.dto.response.EvaluationCriteriaDetailResponse;
 import re.edu.intern_management_prj.model.dto.response.EvaluationCriteriaResponse;
 import re.edu.intern_management_prj.model.entity.EvaluationCriteria;
@@ -16,6 +15,4 @@ public interface EvaluationCriteriaMapper {
     EvaluationCriteriaDetailResponse toEvaluationCriteriaDetailResponse(EvaluationCriteria crit);
 
     EvaluationCriteria toEvaluationCriteria(CreateEvaluationCriteriaRequest req);
-
-    EvaluationCriteria toEvaluationCriteria(UpdateEvaluationCriteriaRequest req);
 }

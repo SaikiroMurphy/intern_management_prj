@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidRoleException.class)
     public ResponseEntity<ApiResponse<String>> handleInvalidRoleException(InvalidRoleException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.<String>builder()
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.<String>builder()
                 .success(false)
                 .message("Vai trò không hợp lệ.")
                 .data(e.getMessage())
@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
 
         @ExceptionHandler(DuplicateResourceException.class)
         public ResponseEntity<ApiResponse<String>> handleDuplicateException(DuplicateResourceException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.<String>builder()
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.<String>builder()
                     .success(false)
                     .message("Dữ liệu đã tồn tại.")
                     .data(e.getMessage())
