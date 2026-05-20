@@ -17,6 +17,7 @@ import re.edu.intern_management_prj.model.dto.request.RoundCriteriaRequest;
 import re.edu.intern_management_prj.model.dto.response.AssessmentRoundDetailResponse;
 import re.edu.intern_management_prj.model.dto.response.AssessmentRoundResponse;
 import re.edu.intern_management_prj.model.dto.response.PageResponse;
+import re.edu.intern_management_prj.model.dto.response.RoundCriteriaResponse;
 import re.edu.intern_management_prj.model.entity.AssessmentRound;
 import re.edu.intern_management_prj.model.entity.EvaluationCriteria;
 import re.edu.intern_management_prj.model.entity.InternshipPhase;
@@ -127,7 +128,12 @@ public class AssessmentRoundService implements IBaseService<AssessmentRoundReque
             throw new EntityNotFoundException("Đợt đánh giá đã bị xóa!");
         }
 
-        return assessmentRoundMapper.toRoundDetailResponse(round);
+        List<RoundCriteriaResponse> crits = roundCriteriaRepository.findByRoundRoundId(id)
+                .stream().map(roundCriteriaMapper::toResponse).toList();
+        AssessmentRoundDetailResponse res = assessmentRoundMapper.toRoundDetailResponse(round);
+        res.setCriteria(crits);
+
+        return res;
     }
 
     public void delete(int id) {
