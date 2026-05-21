@@ -13,7 +13,7 @@ public interface PageMapper {
         return new PageResponse<T>(
                 page.getContent(),
                 page.getNumber(),
-                page.getSize(),
+                page.getNumberOfElements(),
                 page.getTotalElements(),
                 page.getTotalPages()
         );

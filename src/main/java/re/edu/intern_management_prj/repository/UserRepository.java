@@ -14,9 +14,11 @@ import re.edu.intern_management_prj.util.enums.RoleEnum;
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsernameOrEmailOrPhoneNumber(String username, String email, String phoneNumber);
 
+    Page<User> findByIsDeletedFalse(Pageable pageable);
+
     Optional<User> findByUsername(String username);
 
-    Page<User> findByRole(RoleEnum role, Pageable pageable);
+    Page<User> findByRoleAndIsDeletedFalse(RoleEnum role, Pageable pageable);
 
     boolean existsByUsername(String username);
 

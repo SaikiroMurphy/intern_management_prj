@@ -26,12 +26,7 @@ public class InternshipPhaseService implements IBaseService<CreateInternshipPhas
 
     @Override
     public PageResponse<InternshipPhaseResponse> getAll(Pageable pageable) {
-                Page<InternshipPhaseResponse> internshipPhasePage = internshipPhaseRepository.findAll(pageable).map(internshipPhase -> {
-            if (internshipPhase.isDeleted()) {
-                return null;
-            }
-            return internshipPhaseMapper.toInternshipPhaseResponse(internshipPhase);
-        });
+                Page<InternshipPhaseResponse> internshipPhasePage = internshipPhaseRepository.findByIsDeletedFalse(pageable).map(internshipPhaseMapper::toInternshipPhaseResponse);
         return pageMapper.toPageResponse(internshipPhasePage);
 
     }
@@ -87,7 +82,7 @@ public class InternshipPhaseService implements IBaseService<CreateInternshipPhas
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy giai đoạn thực tập với id: " + id));
 
         if (phase.isDeleted()) {
-            throw new EntityNotFoundException("Giai đonaj thực tập này đã bị xóa!");
+            throw new EntityNotFoundException("Giai đoạn thực tập này đã bị xóa!");
         }
 
         return internshipPhaseMapper.toInternshipPhaseDetailResponse(phase);

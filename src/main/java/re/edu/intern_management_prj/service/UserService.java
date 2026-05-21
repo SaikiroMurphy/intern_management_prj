@@ -31,17 +31,12 @@ public class UserService {
 
         if (role != null) {
             RoleEnum roleEnum = RoleEnum.valueOf(role.toUpperCase());
-            userPage = userRepository.findByRole(roleEnum, pageable);
+            userPage = userRepository.findByRoleAndIsDeletedFalse(roleEnum, pageable);
         } else {
-            userPage = userRepository.findAll(pageable);
+            userPage = userRepository.findByIsDeletedFalse(pageable);
         }
 
-        Page<UserResponse> responsePage = userPage.map(user -> {
-            if (user.isDeleted()) {
-                return null;
-            }
-            return userMapper.toUserResponse(user);
-        });
+        Page<UserResponse> responsePage = userPage.map(userMapper::toUserResponse);
 
         return pageMapper.toPageResponse(responsePage);
     }

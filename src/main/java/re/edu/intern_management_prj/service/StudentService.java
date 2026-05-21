@@ -34,12 +34,7 @@ public class StudentService implements IBaseService<CreateStudentRequest, Update
 
         User user = authService.getMyInfo();
         if (user.getRole().name().equals("ADMIN")) {
-            studentPage = studentRepository.findAll(pageable).map(student -> {
-                if (student.getUser().isDeleted()) {
-                    return null;
-                }
-                return studentMapper.toStudentResponse(student);
-            });
+            studentPage = studentRepository.findByUserIsDeletedFalse(pageable).map(studentMapper::toStudentResponse);
         // } else if (user.getRole().name().equals("MENTOR")) {
         //     studentPage = studentRepository.findAll(pageable)
         //             .filter(student -> student.getMentor() != null && student.getMentor().getId().equals(user.getId()))

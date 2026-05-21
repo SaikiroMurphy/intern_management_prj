@@ -29,12 +29,7 @@ public class MentorService implements IBaseService<CreateMentorRequest, UpdateMe
 
     @Override
     public PageResponse<MentorResponse> getAll(Pageable pageable) {
-        Page<MentorResponse> mentorPage = mentorRepository.findAll(pageable).map(mentor -> {
-            if (mentor.getUser().isDeleted()) {
-                return null;
-            }
-            return mentorMapper.toMentorResponse(mentor);
-        });
+        Page<MentorResponse> mentorPage = mentorRepository.findByUserIsDeletedFalse(pageable).map(mentorMapper::toMentorResponse);
         return pageMapper.toPageResponse(mentorPage);
     }
 

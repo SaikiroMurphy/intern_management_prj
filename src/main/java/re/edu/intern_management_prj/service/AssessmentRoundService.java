@@ -44,14 +44,9 @@ public class AssessmentRoundService implements IBaseService<AssessmentRoundReque
     @Override
     public PageResponse<AssessmentRoundResponse> getAll(Pageable pageable) {
 
-        Page<AssessmentRound> page = assessmentRoundRepository.findAll(pageable);
+        Page<AssessmentRound> page = assessmentRoundRepository.findByIsDeletedFalse(pageable);
 
-        Page<AssessmentRoundResponse> res = page.map(round -> {
-            if (round.isDeleted()) {
-                return null;
-            }
-            return assessmentRoundMapper.toRoundResponse(round);
-        });
+        Page<AssessmentRoundResponse> res = page.map(assessmentRoundMapper::toRoundResponse);
 
         return pageMapper.toPageResponse(res);
     }
@@ -115,8 +110,48 @@ public class AssessmentRoundService implements IBaseService<AssessmentRoundReque
 
     @Override
     public AssessmentRoundDetailResponse update(int id, AssessmentRoundRequest updateReq) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+            AssessmentRound round = assessmentRoundRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy đợt đánh giá với id: " + id));
+            if (round.isDeleted()) {
+                throw new EntityNotFoundException("Đợt đánh giá đã bị xóa!");
+            }
+    
+            if (updateReq.getStartDate().isBefore(round.getPhase().getStartDate())
+                    || updateReq.getEndDate().isAfter(round.getPhase().getEndDate())) {
+    
+                throw new IllegalArgumentException(
+                        "Thời gian đợt đánh giá phải nằm trong giai đoạn thực tập.");
+            }
+    
+            round.setRoundName(updateReq.getRoundName());
+            round.setStartDate(updateReq.getStartDate());
+            round.setEndDate(updateReq.getEndDate());
+    
+            assessmentRoundRepository.save(round);
+    
+            List<RoundCriteria> existingCriteria = roundCriteriaRepository.findByRoundRoundId(id);
+            roundCriteriaRepository.deleteAll(existingCriteria);
+    
+            List<RoundCriteria> newCriteria = updateReq.getCriteria()
+                    .stream()
+                    .map(req -> {
+                        RoundCriteria rc = roundCriteriaMapper.toRoundCriteria(req);
+    
+                        rc.setRound(round);
+    
+                        EvaluationCriteria criterion = evaluationCriteriaRepository.findById(req.getCriterionId())
+                                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy tiêu chí với id: " + req.getCriterionId()));
+    
+                        rc.setCriterion(criterion);
+    
+                        return rc;
+                    })
+                    .toList();
+            roundCriteriaRepository.saveAll(newCriteria);
+    
+            AssessmentRoundDetailResponse detailRes = assessmentRoundMapper.toRoundDetailResponse(round);
+            detailRes.setCriteria(newCriteria.stream().map(roundCriteriaMapper::toResponse).toList());
+            return detailRes;
     }
 
     @Override

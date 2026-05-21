@@ -26,13 +26,8 @@ public class EvaluationCriteriaService implements IBaseService<CreateEvaluationC
     @Override
     public PageResponse<EvaluationCriteriaResponse> getAll(Pageable pageable) {
         Page<EvaluationCriteriaResponse> criterias = evaluationCriteriaRepository
-                .findAll(pageable).map(
-                        crit -> {
-                                if (crit.isDeleted()) {
-                                    return null;
-                                }
-                        return evaluationCriteriaMapper.toEvaluationCriteriaResponse(crit);
-                        }
+                .findByIsDeletedFalse(pageable).map(
+                        evaluationCriteriaMapper::toEvaluationCriteriaResponse
                 );
         
         return pageMapper.toPageResponse(criterias);
